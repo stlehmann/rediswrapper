@@ -1,4 +1,4 @@
-import rediswrapper
+import redis
 from typing import NamedTuple, Type, Any, Dict, Optional, List
 
 
@@ -12,7 +12,7 @@ class RedisWrapper:
     def __init__(
         self, host: str = "localhost", port: int = 6379, namespace: Optional[str] = None
     ) -> None:
-        self._client = rediswrapper.Redis(host, port)
+        self._client = redis.Redis(host, port)
         self.namespace = namespace
         self.items: Dict[str, RedisItem] = {}
 
