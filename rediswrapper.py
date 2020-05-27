@@ -13,6 +13,7 @@ class RedisWrapper:
         self, host: str = "localhost", port: int = 6379, namespace: Optional[str] = None
     ) -> None:
         self._client = redis.Redis(host, port)
+        self._pubsub = self._client.pubsub()  # create publish/subscribe object
         self.namespace = namespace
         self.items: Dict[str, RedisItem] = {}
 
@@ -58,6 +59,14 @@ class RedisWrapper:
         """Reset all items to default values."""
         for _, item in self.items.items():
             self._set(item, item.default)
+
+    def publish(self, channel: str, message: Any) -> int:
+        """Publish message on channel. Returns the number of subscribers the message was delivered to."""
+        self._client.publish(channel, message)
+
+    def subscribe(self, *channels: str) -> None:
+        """Subscribe to channels."""
+        return self._pubsub.subscribe(*channels)
 
     def __getitem__(self, key: str) -> Any:
         item = self.items[key]
