@@ -25,7 +25,9 @@ class RedisWrapper:
 
     def _get(self, item: RedisItem) -> bytes:
         bytes_val = self._client.get(self._namespace_key(item.key))
-        if item.type is None:
+        if bytes_val is None:
+            return None
+        elif item.type is None:
             return bytes_val
         elif item.type is bool:
             return True if bytes_val == b"true" else False
