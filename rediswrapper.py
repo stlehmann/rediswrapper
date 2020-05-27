@@ -68,6 +68,10 @@ class RedisWrapper:
         """Subscribe to channels."""
         return self._pubsub.subscribe(*channels)
 
+    def get_message(self) -> Dict[str, Any]:
+        """Get next pending message."""
+        return self._pubsub.get_message()
+
     def __getitem__(self, key: str) -> Any:
         item = self.items[key]
         return self._get(item)
