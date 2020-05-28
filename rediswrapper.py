@@ -23,7 +23,7 @@ class RedisWrapper:
         else:
             return self.namespace + ":" + key
 
-    def _get(self, item: RedisItem) -> bytes:
+    def _get(self, item: RedisItem) -> Any:
         bytes_val = self._client.get(self._namespace_key(item.key))
         if bytes_val is None:
             return None
@@ -31,13 +31,17 @@ class RedisWrapper:
             return bytes_val
         elif item.type is bool:
             return True if bytes_val == b"true" else False
+        elif item.type is str:
+            return bytes_val.decode()
         else:
             return item.type(bytes_val)
 
     def _set(self, item: RedisItem, value: str) -> bool:
         # Use strings for bool values
-        if isinstance(value, bool):
+        if item.type is bool:
             val = b"true" if value else b"false"
+        elif item.type is str:
+            val = value.encode()
         else:
             val = value
 
