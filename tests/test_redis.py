@@ -50,3 +50,6 @@ def test_publish_subscribe(client):
     assert msg["channel"] == b"foo"
     assert msg["type"] == "message"
     assert msg["data"] == b"bar"
+
+def test_ping(client):
+    assert client.ping()

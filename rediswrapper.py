@@ -66,6 +66,10 @@ class RedisWrapper:
         for _, item in self.items.items():
             self._set(item, item.default)
 
+    def ping(self) -> bool:
+        """Ping the Redis server."""
+        return self._client.ping()
+
     def publish(self, channel: str, message: Any) -> int:
         """Publish message on channel. Returns the number of subscribers the message was delivered to."""
         self._client.publish(channel, message)
